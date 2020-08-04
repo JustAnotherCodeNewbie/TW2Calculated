@@ -1,0 +1,113 @@
+<html>
+    <head>
+        <title>Calculate Unit Cost and Time</title>
+    </head>
+    <body>
+        <div id="unitform">
+            Spear: <input id="spear" type="text"><br />
+            Sword: <input id="sword" type="text"><br />
+            Axe: <input id="axe" type="text"><br />
+            Archer: <input id="archer" type="text"><br />
+            Lc: <input id="lc" type="text"><br />
+            Mc: <input id="mc" type="text"><br />
+            Hc: <input id="hc" type="text"><br />
+            Ram: <input id="ram" type="text"><br />
+            Cata: <input id="cata" type="text"><br />
+
+            <button id="calculate">Calculate Resources and Time</button>
+        </div>
+
+        <div id="remember"></div>
+        <script>
+            const remember = document.getElementById("remember");
+            const unitform = document.getElementById("unitform");
+            const calculate = document.getElementById("calculate");
+            var easpear, esword, eaxe, earcher, elc, emc, ehc, eram, ecata;
+            var info = [0,0,0,0,0];
+            var Unit = function(wood, clay, iron, atk, def, cavdef, archdef, buildtime){
+                this.resources = [wood, clay, iron];
+                this.battle = [];
+                this.buildtime = buildtime;
+                this.totRes = function(){
+                    return this.resources[0] + this.resources[1] + this.resources[2];
+                }
+                this.readBTime = function(){
+                    var sec = (buildtime)%60;
+                    buildtime -= sec;
+                    sec <= 10 ? sec = "0" + sec : sec;
+                    var min = (buildtime)/60;
+                    return min + ":" + sec;
+                }
+            }
+            const spear = new Unit(50,30,20,10,25,45,10,90);
+            const sword = new Unit(30,30,70,25,55,5,30,120);
+            const axe = new Unit(60,30,40,45,10,5,10,150);
+            const archer = new Unit(80,30,60,25,10,30,60,180);
+            const lc = new Unit(125,100,250,130,30,40,30,360);
+            const mc = new Unit(250,200,100,150,40,30,50,450);
+            const hc = new Unit(200,150,600,150,200,160,180,600);
+            const ram = new Unit(300,200,200,2,20,50,20,480);
+            const cata = new Unit(320,400,100,100,100,50,100,450);
+
+            calculate.addEventListener("click", doCalculations);
+            function fremember(wood, clay, iron, total, buildtime, resetBool){
+                resetBool ? info = [0,0,0,0,0] : info[0] += wood, info[1] += clay, info[2] += iron, info[3] += total, info[4] += buildtime;
+            }
+            function doCalculations(){
+            espear = document.getElementById("spear").value;
+            esword = document.getElementById("calculate").value;
+            eaxe = document.getElementById("axe").value;
+            earcher = document.getElementById("archer").value;
+            elc = document.getElementById("lc").value;
+            emc = document.getElementById("mc").value;
+            ehc = document.getElementById("hc").value;
+            eram = document.getElementById("ram").value;
+            ecata = document.getElementById("cata").value;
+                if (espear.length > 0){
+                    fremember(espear * spear.resources[0], espear * spear.resources[1], espear * spear.resources[2], espear * spear.totRes(), espear * spear.buildtime, false)
+                }
+                if (esword.length > 0){
+                    fremember(esword * sword.resources[0], esword * sword.resources[1], esword * sword.resources[2], esword * sword.totRes(), esword * sword.buildtime, false)
+                }
+                if (eaxe.length > 0){
+                    fremember(eaxe * axe.resources[0], eaxe * axe.resources[1], eaxe * axe.resources[2], eaxe * axe.totRes(), eaxe * axe.buildtime, false)
+                }
+                if (earcher.length > 0){
+                    fremember(earcher * spear.resources[0], earcher * archer.resources[1], earcher * archer.resources[2], earcher * archer.totRes(), earcher * archer.buildtime, false)
+                }
+                if (elc.length > 0){
+                    fremember(elc * lc.resources[0], elc * lc.resources[1], elc * lc.resources[2], elc * lc.totRes(), elc * lc.buildtime, false)
+                }
+                if (emc.length > 0){
+                    fremember(emc * spear.resources[0], emc * mc.resources[1], emc * mc.resources[2], emc * mc.totRes(), emc * mc.buildtime, false)
+                }
+                if (ehc.length > 0){
+                    fremember(ehc * hc.resources[0], ehc * hc.resources[1], ehc * hc.resources[2], ehc * hc.totRes(), ehc * hc.buildtime, false)
+                }
+                if (eram.length > 0){
+                    fremember(eram * ram.resources[0], eram * ram.resources[1], eram * ram.resources[2], eram * ram.totRes(), eram * ram.buildtime, false)
+                }
+                if (ecata.length > 0){
+                    fremember(ecata * cata.resources[0], ecata * cata.resources[1], ecata * cata.resources[2], ecata * cata.totRes(), ecata * cata.buildtime, false)
+                }
+                let sec = info[4] % 60;
+                let min = (info[4] - sec >= 3600) ?  Math.floor((info[4] % 3600) / 60) : Math.floor(info[4] / 60) ;
+                min <= 10 ? min = "0" + min : min;
+                let h = (info[4] - sec >= 3600) ? Math.floor((info[4] - sec) / 3600) + ":" : "";
+                sec <= 10 ? sec = "0" + sec : sec;
+                
+                remember.innerHTML += "<br />wood: " + info[0] + "<br />";
+                remember.innerHTML += "clay: " + info[1] + "<br />";
+                remember.innerHTML += "iron: " + info[2] + "<br />";
+                remember.innerHTML += "total: " + info[3] + "<br />";
+                remember.innerHTML += "recruit time: " + h + min + ":" + sec + "<br /><hr>"; 
+                fremember(0,0,0,0,0,true);
+                var resetval = [espear,esword,eaxe,earcher,elc,emc,ehc,eram,ecata];
+                rinput = document.getElementsByTagName("input");
+                for(let i = 0; i < rinput.length; i++){
+                    rinput[i].value = "";
+                }
+                }
+        </script>
+    </body>
+</html>
